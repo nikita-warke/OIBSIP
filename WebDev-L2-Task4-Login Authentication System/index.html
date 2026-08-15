@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SecureGate | Authentication</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="page">
+    <div class="hero">
+        <div class="logo">S</div>
+        <p class="mini">SECURE ACCESS SYSTEM</p>
+        <h1>Secure<span>Gate</span></h1>
+        <p>
+            A modern client-side authentication system
+            built with HTML, CSS and JavaScript.
+        </p>
+        <div class="features">
+            <span>🔐 Secure Login</span>
+            <span>🛡️ Protected Dashboard</span>
+            <span>⚡ Fast Access</span>
+        </div>
+    </div>
+    <div class="auth-card">
+        <div class="tabs">
+            <button id="loginTab" class="active">Login</button>
+            <button id="registerTab">Register</button>
+        </div>
+        <section id="loginBox">
+            <h2>Welcome Back 👋</h2>
+            <p class="sub">
+                Login to continue to your dashboard.
+            </p>
+            <form id="loginForm">
+                <label>Username or Email</label>
+                <input
+                    id="loginId"
+                    type="text"
+                    placeholder="Enter username or email">
+                <label>Password</label>
+                <div class="password">
+                    <input
+                        id="loginPassword"
+                        type="password"
+                        placeholder="Enter password"
+                    >
+                    <button type="button" class="eye" id="loginEye">👁</button>
+                </div>
+                <p id="loginMessage" class="message"></p>
+                <button class="main-btn" type="submit">
+                    LOGIN →
+                </button>
+            </form>
+            <p class="switch">
+                Don't have an account?
+                <a id="goRegister">Create Account</a>
+            </p>
+        </section>
+        <section id="registerBox" class="hidden">
+            <h2>Create Account ✨</h2>
+            <p class="sub">
+                Create your secure account.
+            </p>
+            <form id="registerForm">
+                <label>Username</label>
+                <input
+                    id="username"
+                    type="text"
+                    placeholder="Choose username"
+                >
+                <label>Email</label>
+                <input
+                    id="email"
+                    type="email"
+                    placeholder="Enter email"
+                >
+                <label>Password</label>
+                <div class="password">
+                    <input
+                        id="registerPassword"
+                        type="password"
+                        placeholder="Minimum 8 characters"
+                    >
+                    <button type="button" class="eye" id="registerEye">👁</button>
+                </div>
+                <div class="rules">
+                    <span id="ruleLength">○ 8+ characters</span>
+                    <span id="ruleNumber">○ 1 number</span>
+                </div>
+                <p id="registerMessage" class="message"></p>
+                <button class="main-btn" type="submit">
+                    CREATE ACCOUNT →
+                </button>
+            </form>
+            <p class="switch">
+                Already have an account?
+                <a id="goLogin">Login</a>
+            </p>
+        </section>
+    </div>
+</div>
+<script>
+const loginTab = document.getElementById("loginTab");
+const registerTab = document.getElementById("registerTab");
+const loginBox = document.getElementById("loginBox");
+const registerBox = document.getElementById("registerBox");
+function showLogin() {
+    loginBox.classList.remove("hidden");
+    registerBox.classList.add("hidden");
+    loginTab.classList.add("active");
+    registerTab.classList.remove("active");
+}
+function showRegister() {
+    loginBox.classList.add("hidden");
+    registerBox.classList.remove("hidden");
+    loginTab.classList.remove("active");
+    registerTab.classList.add("active");
+}
+loginTab.addEventListener("click", showLogin);
+registerTab.addEventListener("click", showRegister);
+document.getElementById("goRegister").addEventListener("click", showRegister);
+document.getElementById("goLogin").addEventListener("click", showLogin);
+function togglePassword(inputId, button) {
+    const input = document.getElementById(inputId);
+    if (input.type === "password") {
+        input.type = "text";
+        button.textContent = "🙈";
+    } else {
+        input.type = "password";
+        button.textContent = "👁";
+    }
+}
+document.getElementById("loginEye").addEventListener("click", function() {
+    togglePassword("loginPassword", this);
+});
+document.getElementById("registerEye").addEventListener("click", function() {
+    togglePassword("registerPassword", this);
+});
+function makeHash(password) {
+    let hash = 0;
+    for (let i = 0; i < password.length; i++) {
+        hash = ((hash << 5) - hash) + password.charCodeAt(i);
+        hash |= 0;
+    }
+    return "HASH_" + Math.abs(hash);
+}
+document.getElementById("registerPassword").addEventListener("input", function() {
+    const password = this.value;
+    document.getElementById("ruleLength").textContent =
+        password.length >= 8
+        ? "✓ 8+ characters"
+        : "○ 8+ characters";
+    document.getElementById("ruleNumber").textContent =
+        /\d/.test(password)
+        ? "✓ 1 number"
+        : "○ 1 number";
+});
+document.getElementById("registerForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+    const username =
+        document.getElementById("username").value.trim();
+    const email =
+        document.getElementById("email").value.trim().toLowerCase();
+    const password =
+        document.getElementById("registerPassword").value;
+    const message =
+        document.getElementById("registerMessage");
+    if (!username || !email || !password) {
+        message.textContent = "Please fill in all fields.";
+        message.className = "message error";
+        return;
+    }
+    if (password.length < 8 || !/\d/.test(password)) {
+        message.textContent =
+            "Password must have 8+ characters and 1 number.";
+        message.className = "message error";
+        return;
+    }
+    let users =
+        JSON.parse(localStorage.getItem("secureUsers")) || [];
+    const duplicate = users.some(function(user) {
+        return user.username.toLowerCase() === username.toLowerCase()
+            || user.email.toLowerCase() === email;
+    });
+    if (duplicate) {
+        message.textContent =
+            "Username or email already exists.";
+        message.className = "message error";
+        return;
+    }
+    const newUser = {
+        username: username,
+        email: email,
+        password: makeHash(password)
+    };
+    users.push(newUser);
+    localStorage.setItem(
+        "secureUsers",
+        JSON.stringify(users)
+    );
+    message.textContent =
+        "Account created successfully!";
+    message.className = "message success";
+    document.getElementById("registerForm").reset();
+    setTimeout(function() {
+        showLogin();
+    }, 1000);
+});
+document.getElementById("loginForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+    const id =
+        document.getElementById("loginId").value.trim().toLowerCase();
+    const password =
+        document.getElementById("loginPassword").value;
+    const message =
+        document.getElementById("loginMessage");
+    if (!id || !password) {
+        message.textContent =
+            "Please fill in all fields.";
+        message.className = "message error";
+        return;
+    }
+    const users =
+        JSON.parse(localStorage.getItem("secureUsers")) || [];
+    const user = users.find(function(item) {
+        return item.username.toLowerCase() === id
+            || item.email.toLowerCase() === id;
+    });
+    const passwordHash = makeHash(password);
+    if (!user || user.password !== passwordHash) {
+        message.textContent =
+            "Invalid username/email or password.";
+        message.className = "message error";
+        return;
+    }
+    localStorage.setItem(
+        "secureSession",
+        JSON.stringify({
+            username: user.username,
+            email: user.email
+        })
+    );
+    window.location.href = "dashboard.html";
+});
+</script>
+</body>
+</html>
