@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+    <title>TaskFlow | Smart To-Do Manager</title>
+    
+    <link rel="preconnect"
+          href="https://fonts.googleapis.com">
+    <link rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap"
+          rel="stylesheet">
+    <link rel="stylesheet"
+          href="style.css">
+</head>
+<body>
+    
+    <header class="header">
+        <div class="brand">
+            <div class="logo">
+                ✓
+            </div>
+            <div>
+                <h1>TaskFlow</h1>
+                <p>
+                    Organize. Prioritize. Accomplish.
+                </p>
+            </div>
+        </div>
+        
+        <button id="themeToggle"
+                class="theme-btn"
+                aria-label="Toggle dark mode">
+            🌙
+        </button>
+    </header>
+    
+    <main class="container">
+        
+        <section class="intro">
+            <p class="eyebrow">
+                MY DAILY WORKSPACE
+            </p>
+            <h2>
+                Turn plans into
+                <span>progress.</span>
+            </h2>
+            <p class="intro-text">
+                Keep your tasks organized, prioritize what matters,
+                and stay focused on what comes next.
+            </p>
+        </section>
+        
+        <section class="task-input-card">
+            <input
+                type="text"
+                id="taskInput"
+                placeholder="What needs to be done?"
+                maxlength="100">
+            <select id="prioritySelect">
+                <option value="medium">
+                    🟡 Medium Priority
+                </option>
+                <option value="high">
+                    🔴 High Priority
+                </option>
+                <option value="low">
+                    🔵 Low Priority
+                </option>
+            </select>
+            <select id="categorySelect">
+                <option value="work">
+                    💼 Work
+                </option>
+                <option value="personal">
+                    🏠 Personal
+                </option>
+                <option value="shopping">
+                    🛒 Shopping
+                </option>
+                <option value="study">
+                    🎓 Study
+                </option>
+            </select>
+            <button id="addTaskBtn"
+                    class="add-btn">
+                + Add Task
+            </button>
+        </section>
+        
+        <div class="filter-bar">
+            <button class="filter-btn active"
+                    data-filter="all">
+                All
+            </button>
+            <button class="filter-btn"
+                    data-filter="work">
+                💼 Work
+            </button>
+            <button class="filter-btn"
+                    data-filter="personal">
+                🏠 Personal
+            </button>
+            <button class="filter-btn"
+                    data-filter="shopping">
+                🛒 Shopping
+            </button>
+            <button class="filter-btn"
+                    data-filter="study">
+                🎓 Study
+            </button>
+        </div>
+        
+        <section class="task-grid">
+            
+            <div class="task-section">
+                <div class="section-header">
+                    <div>
+                        <p class="section-label">
+                            TO DO
+                        </p>
+                        <h3>
+                            Pending Tasks
+                        </h3>
+                    </div>
+                    <span id="pendingCount"
+                          class="count-badge">
+                        0 pending
+                    </span>
+                </div>
+                <div id="pendingList"
+                     class="task-list">
+                    
+                </div>
+            </div>
+            
+            <div class="task-section completed-section">
+                <div class="section-header">
+                    <div>
+                        <p class="section-label">
+                            DONE
+                        </p>
+                        <h3>
+                            Completed Tasks
+                        </h3>
+                    </div>
+                    <span id="completedCount"
+                          class="count-badge">
+                        0 completed
+                    </span>
+                </div>
+                <div id="completedList"
+                     class="task-list">
+                    
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <footer>
+        <p>
+            TaskFlow
+        </p>
+        <span>
+            Stay organized • Stay productive
+        </span>
+    </footer>
+    <script src="script.js"></script>
+</body>
+</html>
