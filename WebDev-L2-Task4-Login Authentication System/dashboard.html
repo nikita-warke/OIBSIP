@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SecureGate | Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<script>
+const session =
+    JSON.parse(localStorage.getItem("secureSession"));
+if (!session) {
+    window.location.href = "index.html";
+}
+</script>
+<header>
+    <div class="nav-logo">
+        <div class="logo small">S</div>
+        <strong>SecureGate</strong>
+    </div>
+    <button id="logout">LOGOUT</button>
+</header>
+<main class="dashboard">
+    <p class="mini">PROTECTED AREA</p>
+    <h1>
+        Welcome,
+        <span id="userName"></span> 👋
+    </h1>
+    <p class="dash-sub">
+        You have successfully authenticated.
+        Your dashboard is protected.
+    </p>
+    <div class="dash-grid">
+        <div class="dash-card">
+            <div class="dash-icon">🛡️</div>
+            <small>SECURITY</small>
+            <h2>Protected</h2>
+            <p>Authenticated session is active.</p>
+        </div>
+        <div class="dash-card">
+            <div class="dash-icon">👤</div>
+            <small>USERNAME</small>
+            <h2 id="user"></h2>
+            <p>Verified account.</p>
+        </div>
+        <div class="dash-card">
+            <div class="dash-icon">✉️</div>
+            <small>EMAIL</small>
+            <h2 id="email"></h2>
+            <p>Registered email address.</p>
+        </div>
+        <div class="dash-card">
+            <div class="dash-icon">🔐</div>
+            <small>PASSWORD</small>
+            <h2>Hashed</h2>
+            <p>Password is not stored as plain text.</p>
+        </div>
+    </div>
+</main>
+<script>
+document.getElementById("userName").textContent =
+    session.username;
+document.getElementById("user").textContent =
+    session.username;
+document.getElementById("email").textContent =
+    session.email;
+document.getElementById("logout").addEventListener("click", function() {
+    localStorage.removeItem("secureSession");
+    window.location.href = "index.html";
+});
+</script>
+</body>
+</html>
